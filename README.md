@@ -77,6 +77,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - Configure TailWindCSS
 - Header 
 - Login-Form
+- Routinng
+- Form validation 
+- useRef hook
+- Firebase set up configuration and deploy app 
 
 
 # Features
@@ -94,3 +98,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - Netflix-GPT
     -Search Bar
     -Movie suggestions
+
+### Firebase 
+    -create new project
+    -Follow instruction on firebase
+    -run command of fire
