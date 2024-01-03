@@ -1,50 +1,96 @@
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "./utils/validate";
 import { auth } from "./utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { USER_AVTAR } from "./utils/constant";
+import { useDispatch } from "react-redux";
+import { addUser } from "./utils/userSlice";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [signUp, setSignUp] = useState(false);
   const [inputErrorMessage, setInputErrorMessage] = useState(null);
+  const name = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
 
   const handleSignUp = () => {
     setSignUp(!signUp);
   };
 
-  const email = useRef(null);
-  const password = useRef(null);
-
   const handleBtnClick = () => {
-    
-    // Data Validation 
+    // Data Validation
     const message = checkValidData(email.current.value, password.current.value);
     setInputErrorMessage(message);
     if (message) return;
 
     //Data authentication using firebase authentication APIs
+    //SignUp and SIgnIn logics
     if (signUp) {
       //sign In...
-      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log(user);
+          // console.log(user);
+
+          //updatating the firebase
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: USER_AVTAR,
+          })
+            .then(() => {
+
+              const { uid, email, displayName, photoURL } = auth.currentUser; //from firebase..
+
+              //here dispatches an action and update the store->userslice->user
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+              navigate("/browse");
+            })
+            .catch((error) => {
+              setInputErrorMessage(error.message);
+            });
+
+          //navigate('/browse')
           // ...
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          setInputErrorMessage(errorMessage + "-" +errorCode);
+          setInputErrorMessage(errorMessage + "-" + errorCode);
           // ...
         });
-    } 
-    else {
-        signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+    } else {
+      // signIN Logic : firebase signInWithEmailAndPassword Api
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
         .then((userCredential) => {
-          // Signed in 
+          // Signed in
           const user = userCredential.user;
           console.log(user);
+          navigate("/browse");
+
           // ...
         })
         .catch((error) => {
@@ -52,7 +98,6 @@ const Login = () => {
           const errorMessage = error.message;
           setInputErrorMessage(errorMessage + "-" + errorCode);
         });
-      
     }
   };
 
@@ -77,10 +122,14 @@ const Login = () => {
           {signUp ? (
             <div className="pb-5">
               <div className="bg-[#333] px-5 pt-4 pb-1 rounded-lg">
-                <label htmlFor="signUpUserName" className="block text-[10px] text-gray-400">
+                <label
+                  htmlFor="signUpUserName"
+                  className="block text-[10px] text-gray-400"
+                >
                   Enter Your Name
                 </label>
                 <input
+                  ref={name}
                   id="signUpUserName"
                   type="text"
                   placeholder="Username"
@@ -93,7 +142,10 @@ const Login = () => {
           )}
           <div className="pb-5">
             <div className="bg-[#333] px-5 pt-4 pb-1 rounded-lg">
-              <label htmlFor="inputEmailMob" className="block text-[10px] text-gray-400">
+              <label
+                htmlFor="inputEmailMob"
+                className="block text-[10px] text-gray-400"
+              >
                 Email or phone number
               </label>
               <input
@@ -108,7 +160,10 @@ const Login = () => {
 
           <div className="pb-5">
             <div className="bg-[#333] w-full px-5 pt-4 pb-1 rounded-lg">
-              <label htmlFor="pass_Id " className="block text-[10px] text-gray-400">
+              <label
+                htmlFor="pass_Id "
+                className="block text-[10px] text-gray-400"
+              >
                 Password
               </label>
               <input

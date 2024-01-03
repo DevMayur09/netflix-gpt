@@ -80,7 +80,13 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - Routinng
 - Form validation 
 - useRef hook
-- Firebase set up configuration and deploy app 
+- Firebase set up configuration and deploy app .
+- Create a signUp user Account.
+- install @reactjs-toolkit(-D) and react-redux
+- create a store and Provide it our app.
+- Implement signIn user APIs.
+- Implement updateProfile API to update into the firebase
+- Implement signOut
 
 
 # Features
