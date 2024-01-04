@@ -87,6 +87,16 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - Implement signIn user APIs.
 - Implement updateProfile API to update into the firebase
 - Implement signOut
+- if userLoggedIn prevent redirection to other page 
+- unSubscribed to the onAuthStateChanged callback
+- Add hardcoded values to constant files 
+- Register for TMDB API & Create an app & get access tokens 
+- Get the data from TMDB now playing movies list API.
+- created the custom hook
+- create userSlice
+- planning for main conatiner and secondary container
+- fetch data video trailer from firebase and update the store
+- 
 
 
 # Features

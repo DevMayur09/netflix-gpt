@@ -7,13 +7,14 @@ import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "./utils/validate";
 import { auth } from "./utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { USER_AVTAR } from "./utils/constant";
 import { useDispatch } from "react-redux";
 import { addUser } from "./utils/userSlice";
+import { BG_C0VER_IMG } from "./utils/constant";
+
+
 
 const Login = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [signUp, setSignUp] = useState(false);
   const [inputErrorMessage, setInputErrorMessage] = useState(null);
@@ -43,7 +44,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          // console.log(user);
 
           //updatating the firebase
           updateProfile(user, {
@@ -53,8 +53,7 @@ const Login = () => {
             .then(() => {
 
               const { uid, email, displayName, photoURL } = auth.currentUser; //from firebase..
-
-              //here dispatches an action and update the store->userslice->user
+            //here dispatches an action and update the store->userslice->user and update store
               dispatch(
                 addUser({
                   uid: uid,
@@ -63,14 +62,12 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-              navigate("/browse");
+             
             })
             .catch((error) => {
               setInputErrorMessage(error.message);
             });
 
-          //navigate('/browse')
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -78,7 +75,8 @@ const Login = () => {
           setInputErrorMessage(errorMessage + "-" + errorCode);
           // ...
         });
-    } else {
+    } 
+    else {
       // signIN Logic : firebase signInWithEmailAndPassword Api
       signInWithEmailAndPassword(
         auth,
@@ -86,12 +84,7 @@ const Login = () => {
         password.current.value
       )
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
-          console.log(user);
-          navigate("/browse");
-
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -108,7 +101,7 @@ const Login = () => {
         <div className="overflow-hidden">
           <img
             alt="background-cover-Img"
-            src="https://assets.nflxext.com/ffe/siteui/vlv3/c31c3123-3df7-4359-8b8c-475bd2d9925d/15feb590-3d73-45e9-9e4a-2eb334c83921/IN-en-20231225-popsignuptwoweeks-perspective_alpha_website_large.jpg"
+            src={BG_C0VER_IMG}
           />
         </div>
       </div>
@@ -194,7 +187,7 @@ const Login = () => {
                 id="checkBoxRemME"
                 defaultChecked
               />
-              <label className="" for="checkBoxRemME">
+              <label className="" htmlFor="checkBoxRemME">
                 Remember Me
               </label>
             </div>
@@ -221,7 +214,7 @@ const Login = () => {
             <p>
               Sign in is protected by Google reCAPTCHA to ensure you’re not a
               bot.
-              <a className="text-blue-800 mx-1">Learn More</a>
+              <a href="" className="text-blue-800 mx-1">Learn More</a>
             </p>
           </div>
         </form>
